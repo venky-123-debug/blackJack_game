@@ -186,20 +186,51 @@
     }
   }
 
- const checkGameOver = () => {
+const checkGameOver = () => {
   gameOver = true
   console.log({ dealerScore, playerScore })
   checkWin()
 
-  if (playerScore <= 21 && (playerScore > dealerScore || dealerScore > 21)) {
-    user = "Player"
-    userWins++
+  if (playerScore <= 21) {
+    if (dealerScore <= 21) {
+      if (playerScore > dealerScore) {
+        user = "Player"
+        userWins++
+      } else if (dealerScore > playerScore) {
+        user = "Dealer"
+        userLosses++
+      } else {
+        // Scores are tied
+        matchTied = true
+      }
+    } else {
+      // Dealer busts
+      user = "Player"
+      userWins++
+    }
   } else {
+    // Player busts
     user = "Dealer"
     userLosses++
   }
+
   updateScores()
 }
+
+  //  const checkGameOver = () => {
+//   gameOver = true
+//   console.log({ dealerScore, playerScore })
+//   checkWin()
+
+//   if (playerScore <= 21 && (playerScore > dealerScore || dealerScore > 21)) {
+//     user = "Player"
+//     userWins++
+//   } else {
+//     user = "Dealer"
+//     userLosses++
+//   }
+//   updateScores()
+// }
     const checkMatchTied = () => {
     try {
       if (dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
