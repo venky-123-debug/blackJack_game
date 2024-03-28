@@ -23,6 +23,7 @@
   let loading = false
   let matchesPlayed = 0
   let matchTied = false
+  let user
 
   let suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
   let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -86,17 +87,15 @@
       playerHand = [await drawCard(), await drawCard()]
       dealerHand = [await drawCard(), await drawCard()]
       matchesPlayed++
-      // if (matchesPlayed == 1 && dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21 && dealerScore >= 0 && playerScore >= 0) {
-      //   console.log({ dealerScore, playerScore })
-      //   checkGameOver()
-      //   // matchTied = true
-      // }
       // console.log({ playerHand, dealerHand })
       updateScores()
+      console.log({ dealerScore, playerScore })
+      checkWin()
     } catch (error) {
       console.error(error)
     }
   }
+
 
   const handleStartGame = async () => {
     try {
@@ -147,12 +146,14 @@
   }
 
   const stand = async () => {
-    while (dealerScore < 17) {
+    if (dealerScore < 17) {
       let card = await drawCard()
       dealerHand = [...dealerHand, card]
       updateScores()
+      await stand()
+    } else {
+      checkGameOver()
     }
-    checkGameOver()
   }
 
   const updateScores = () => {
@@ -185,59 +186,60 @@
     }
   }
 
-  const checkGameOver = () => {
-    gameOver = true
-    if (dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
-      console.log({ dealerScore, playerScore })
-      matchTied = true
-    } else if (playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)) {
-      if (dealerScore === 21 && dealerHand.length === 2) {
-        dealerBlackjacks++
+ const checkGameOver = () => {
+  gameOver = true
+  console.log({ dealerScore, playerScore })
+  checkWin()
+
+  if (playerScore <= 21 && (playerScore > dealerScore || dealerScore > 21)) {
+    user = "Player"
+    userWins++
+  } else {
+    user = "Dealer"
+    userLosses++
+  }
+  updateScores()
+}
+    const checkMatchTied = () => {
+    try {
+      if (dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
+        // if (matchesPlayed === 1 && dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
+        matchTied = true
+        gameOver = true
       }
-      if (playerScore === 21 && playerHand.length === 2) {
-        userBlackjacks++
-      }
-      if (dealerScore > 21 || (playerScore <= 21 && playerScore > dealerScore)) {
-        user = "Player"
-        userWins++
-      } else {
-        user = "Dealer"
-        userLosses++
-      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
-  // const checkGameOver = () => {
-  //   gameOver = true
-  //   console.log({ dealerScore, playerScore })
-  //   if (dealerScore === playerScore) {
-  //     matchTied = true
-  //   } else if (playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)) {
-  //     if (dealerScore === 21 && dealerHand.length === 2) {
-  //       dealerBlackjacks++
-  //     }
-  //     if (playerScore === 21 && playerHand.length === 2) {
-  //       userBlackjacks++
-  //     }
-  //     // if (playerScore === 21 && playerScore > dealerScore) {
-  //     //   user = "Player"
-  //     //   userWins++
-  //     // }
-  //     if (dealerScore > 21 || (playerScore <= 21 && playerScore > dealerScore)) {
-  //       user = "Player"
-  //       userWins++
-  //     } else {
-  //       user = "Dealer"
-  //       userLosses++
-  //     }
-  //   }
-  //   updateScores()
-  // }
+  const checkBlackJack = () => {
+    try {
+      if (dealerScore === 21 && dealerHand.length === 2) {
+        dealerBlackjacks++
+        gameOver = true
+      }
+      if (playerScore === 21 && playerHand.length === 2) {
+        userBlackjacks++
+        gameOver = true
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  const checkWin = () => {
+    try {
+      checkMatchTied()
+      checkBlackJack()
+    } catch (error) {
+      console.error(error)
+      gameOver = false
+    }
+  }
+
   onDestroy(() => {
     localStorage.clear()
   })
 
-  let user
   const restartGame = () => {
     try {
       deal()
