@@ -3,6 +3,7 @@
   import gameStore from "./stores/gameStore"
   import axios from "axios"
   import Card from "./components/card.svelte"
+  import MainCard from "./components/mainCard.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -142,45 +143,27 @@
     localStorage.clear()
   })
 </script>
+
 <svelte:head>
   <title>BlackJack</title>
 </svelte:head>
 <div class="bg-white py-12">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl lg:mx-0">
+    <div class="mx-auto flex w-full flex-col items-center justify-center">
       <h2 class="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">BlackJack game</h2>
       <button
-        type="button" 
+        type="button"
+        class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600"
         on:click={() => {
           deal()
         }}
       >
-        Start Game
+        Draw cards
       </button>
     </div>
     <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-      <div class="flex max-w-xl flex-col items-start justify-between rounded-md bg-gray-300 p-3">
-        <div class="flex w-full items-center text-center">
-          <div class="text-2xl font-semibold text-gray-500">Player</div>
-        </div>
-
-        <div class="flex w-full items-center justify-center gap-3 pt-6">
-          {#each playerHand as card}
-            <Card {card} />
-          {/each}
-        </div>
-      </div>
-      <div class="flex max-w-xl flex-col items-start justify-between rounded-md bg-gray-300 p-3">
-        <div class="flex w-full items-center text-center">
-          <div class="text-2xl font-semibold text-gray-500">Dealer</div>
-        </div>
-
-        <div class="flex w-full items-center justify-center gap-3 pt-6">
-          {#each dealerHand as card}
-            <Card {card} />
-          {/each}
-        </div>
-      </div>
+      <MainCard title="Player" array={playerHand} />
+      <MainCard title="Dealer" array={dealerHand} />
     </div>
   </div>
 </div>

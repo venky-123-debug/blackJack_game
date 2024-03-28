@@ -9,7 +9,7 @@
 // }
 </script>
 
-<div class="flex w-[12%] flex-col justify-between gap-3 rounded-md bg-white">
+<div class="flex w-[30%] flex-col justify-between gap-3 rounded-md bg-white">
   <div class="flex w-full flex-col items-start justify-center pl-2">
     <p class=" text-3xl "  style="color: {card.color};">
       {card.value}
