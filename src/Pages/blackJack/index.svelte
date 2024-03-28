@@ -3,8 +3,8 @@
   import gameStore from "./stores/gameStore"
   import axios from "axios"
   import MainCard from "./components/mainCard.svelte"
-    import StartPage from "./components/startPage.svelte"
-    import LoadingScreen from "./shared/loadingScreen.svelte"
+  import StartPage from "./components/startPage.svelte"
+  import LoadingScreen from "./shared/loadingScreen.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -20,7 +20,6 @@
   let randomNumber = 0
   let loadStartPage = false
   let loading = false
-
 
   let suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
   let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -72,7 +71,6 @@
         deck.splice(randomNumber, 1)
         return drawnCard
       }
-      
     } catch (error) {
       console.error(error)
     } finally {
@@ -87,11 +85,9 @@
 
       console.log({ playerHand, dealerHand })
       updateScores()
-      loadStartPage = true
     } catch (error) {
       console.error(error)
-      loadStartPage = false
-    } 
+    }
   }
   const handleStartGame = async () => {
     try {
@@ -99,7 +95,6 @@
       $gameStore.matchId = id
     } catch (error) {
       console.error(error)
-      // notify.danger(error)
     }
   }
   const handleStart = () => {
@@ -206,28 +201,33 @@
   <title>BlackJack</title>
 </svelte:head>
 
-<LoadingScreen bind:loading/>
+<LoadingScreen bind:loading />
 {#if !loadStartPage}
-<StartPage on:click={deal} />
+  <StartPage
+    on:click={() => {
+      deal()
+      loadStartPage = !loadStartPage
+    }}
+  />
 {:else}
-<div class="bg-white py-12">
-  <div class="mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-      <MainCard title="Player" array={playerHand} score={playerScore} />
-      <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
-    </div>
+  <div class="bg-white py-12">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+        <MainCard title="Player" array={playerHand} score={playerScore} />
+        <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
+      </div>
 
-    <div class="flex items-center justify-center gap-6">
-      <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
-      <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
+      <div class="flex items-center justify-center gap-6">
+        <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
+        <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
+      </div>
     </div>
+    <h2>Statistics:</h2>
+    <p>User Wins: {userWins}</p>
+    <p>User Losses: {userLosses}</p>
+    <p>User Blackjacks: {userBlackjacks}</p>
+    <p>Dealer Wins: {dealerWins}</p>
+    <p>Dealer Losses: {dealerLosses}</p>
+    <p>Dealer Blackjacks: {dealerBlackjacks}</p>
   </div>
-  <h2>Statistics:</h2>
-  <p>User Wins: {userWins}</p>
-  <p>User Losses: {userLosses}</p>
-  <p>User Blackjacks: {userBlackjacks}</p>
-  <p>Dealer Wins: {dealerWins}</p>
-  <p>Dealer Losses: {dealerLosses}</p>
-  <p>Dealer Blackjacks: {dealerBlackjacks}</p>
-</div>
 {/if}
