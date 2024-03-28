@@ -141,7 +141,9 @@
       let card = await drawCard()
       playerHand = [...playerHand, card]
       // console.log({ playerHand })
+      console.log({ playerScore , dealerScore })
       if (playerScore > 17 && playerScore > dealerScore) {
+        console.log("auto stand")
         await stand()
       }
       updateScores()
@@ -209,11 +211,38 @@
     }
   }
 
-  const checkGameOver = () => {
-    gameOver = true
-    console.log({ dealerScore, playerScore })
-    checkWin()
+  // const checkGameOver = () => {
+  //   gameOver = true
+  //   console.log({ dealerScore, playerScore })
+  //   checkWin()
 
+  //   if (playerScore <= 21) {
+  //     if (dealerScore <= 21) {
+  //       if (playerScore > dealerScore) {
+  //         user = "Player"
+  //         userWins++
+  //       } else if (dealerScore > playerScore) {
+  //         user = "Dealer"
+  //         userLosses++
+  //       } else {
+  //         // Scores are tied
+  //         matchTied = true
+  //       }
+  //     } else {
+  //       // Dealer busts
+  //       user = "Player"
+  //       userWins++
+  //     }
+  //   } else {
+  //     // Player busts
+  //     user = "Dealer"
+  //     userLosses++
+  //   }
+
+  //   updateScores()
+  // }
+
+  const checkGameOver = () => {
     if (playerScore <= 21) {
       if (dealerScore <= 21) {
         if (playerScore > dealerScore) {
@@ -237,7 +266,14 @@
       userLosses++
     }
 
+    // Update scores
     updateScores()
+
+    // Check win status
+    checkWin()
+
+    // Set gameOver based on checkWin result
+    gameOver = playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)
   }
 
   const checkMatchTied = () => {
