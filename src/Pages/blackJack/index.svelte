@@ -96,7 +96,6 @@
     }
   }
 
-
   const handleStartGame = async () => {
     try {
       let id = await handleStart()
@@ -138,12 +137,36 @@
   }
 
   const hit = async () => {
-    let card = await drawCard()
-    playerHand = [...playerHand, card]
-    // console.log({ playerHand })
-    updateScores()
-    checkGameOver()
+    try {
+      let card = await drawCard()
+      playerHand = [...playerHand, card]
+      // console.log({ playerHand })
+      if (playerScore > 17 && playerScore > dealerScore) {
+        await stand()
+      }
+      updateScores()
+      checkGameOver()
+    } catch (error) {
+      console.error(error)
+    }
   }
+
+  // const stand = async () => {
+  //   if (dealerScore < 17) {
+  //     let card = await drawCard()
+  //     dealerHand = [...dealerHand, card]
+  //     updateScores()
+
+  //     if (!hitCalled && playerScore > 17 && playerScore > dealerScore) {
+  //       hitCalled = true
+  //       await stand()
+  //     } else {
+  //       checkGameOver()
+  //     }
+  //   } else {
+  //     checkGameOver()
+  //   }
+  // }
 
   const stand = async () => {
     if (dealerScore < 17) {
@@ -186,52 +209,38 @@
     }
   }
 
-const checkGameOver = () => {
-  gameOver = true
-  console.log({ dealerScore, playerScore })
-  checkWin()
+  const checkGameOver = () => {
+    gameOver = true
+    console.log({ dealerScore, playerScore })
+    checkWin()
 
-  if (playerScore <= 21) {
-    if (dealerScore <= 21) {
-      if (playerScore > dealerScore) {
+    if (playerScore <= 21) {
+      if (dealerScore <= 21) {
+        if (playerScore > dealerScore) {
+          user = "Player"
+          userWins++
+        } else if (dealerScore > playerScore) {
+          user = "Dealer"
+          userLosses++
+        } else {
+          // Scores are tied
+          matchTied = true
+        }
+      } else {
+        // Dealer busts
         user = "Player"
         userWins++
-      } else if (dealerScore > playerScore) {
-        user = "Dealer"
-        userLosses++
-      } else {
-        // Scores are tied
-        matchTied = true
       }
     } else {
-      // Dealer busts
-      user = "Player"
-      userWins++
+      // Player busts
+      user = "Dealer"
+      userLosses++
     }
-  } else {
-    // Player busts
-    user = "Dealer"
-    userLosses++
+
+    updateScores()
   }
 
-  updateScores()
-}
-
-  //  const checkGameOver = () => {
-//   gameOver = true
-//   console.log({ dealerScore, playerScore })
-//   checkWin()
-
-//   if (playerScore <= 21 && (playerScore > dealerScore || dealerScore > 21)) {
-//     user = "Player"
-//     userWins++
-//   } else {
-//     user = "Dealer"
-//     userLosses++
-//   }
-//   updateScores()
-// }
-    const checkMatchTied = () => {
+  const checkMatchTied = () => {
     try {
       if (dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
         // if (matchesPlayed === 1 && dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
