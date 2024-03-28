@@ -1,12 +1,5 @@
 <script>
   export let card
-
-//   {
-//     "suit": "Spades",
-//     "value": "9",
-//     "entityCode": "&#9824;",
-//     "color": "black"
-// }
 </script>
 
 <div class="flex w-[30%] flex-col justify-between gap-3 rounded-md bg-white">

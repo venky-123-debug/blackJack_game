@@ -21,6 +21,8 @@
   let randomNumber = 0
   let loadStartPage = false
   let loading = false
+  let matchesPlayed = 0
+  let matchTied = false
 
   let suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
   let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -68,7 +70,7 @@
         return deck.pop()
       } else {
         let drawnCard = deck[randomNumber]
-        console.log({ drawnCard })
+        // console.log({ drawnCard })
         deck.splice(randomNumber, 1)
         return drawnCard
       }
@@ -83,8 +85,13 @@
     try {
       playerHand = [await drawCard(), await drawCard()]
       dealerHand = [await drawCard(), await drawCard()]
-
-      console.log({ playerHand, dealerHand })
+      matchesPlayed++
+      // if (matchesPlayed == 1 && dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21 && dealerScore >= 0 && playerScore >= 0) {
+      //   console.log({ dealerScore, playerScore })
+      //   checkGameOver()
+      //   // matchTied = true
+      // }
+      // console.log({ playerHand, dealerHand })
       updateScores()
     } catch (error) {
       console.error(error)
@@ -114,7 +121,7 @@
   const drawMatch = async () => {
     try {
       let apiData = await handleDraw()
-      console.log({ apiData })
+      // console.log({ apiData })
       randomNumber = apiData.random
     } catch (error) {
       console.error(error)
@@ -134,7 +141,7 @@
   const hit = async () => {
     let card = await drawCard()
     playerHand = [...playerHand, card]
-    console.log({ playerHand })
+    // console.log({ playerHand })
     updateScores()
     checkGameOver()
   }
@@ -179,9 +186,11 @@
   }
 
   const checkGameOver = () => {
-    if (playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)) {
-      gameOver = true
-
+    gameOver = true
+    if (dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
+      console.log({ dealerScore, playerScore })
+      matchTied = true
+    } else if (playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)) {
       if (dealerScore === 21 && dealerHand.length === 2) {
         dealerBlackjacks++
       }
@@ -196,27 +205,55 @@
         userLosses++
       }
     }
-    updateScores()
   }
+
+  // const checkGameOver = () => {
+  //   gameOver = true
+  //   console.log({ dealerScore, playerScore })
+  //   if (dealerScore === playerScore) {
+  //     matchTied = true
+  //   } else if (playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)) {
+  //     if (dealerScore === 21 && dealerHand.length === 2) {
+  //       dealerBlackjacks++
+  //     }
+  //     if (playerScore === 21 && playerHand.length === 2) {
+  //       userBlackjacks++
+  //     }
+  //     // if (playerScore === 21 && playerScore > dealerScore) {
+  //     //   user = "Player"
+  //     //   userWins++
+  //     // }
+  //     if (dealerScore > 21 || (playerScore <= 21 && playerScore > dealerScore)) {
+  //       user = "Player"
+  //       userWins++
+  //     } else {
+  //       user = "Dealer"
+  //       userLosses++
+  //     }
+  //   }
+  //   updateScores()
+  // }
   onDestroy(() => {
     localStorage.clear()
   })
 
   let user
+  const restartGame = () => {
+    try {
+      deal()
+      gameOver = !gameOver
+      matchTied = false
+    } catch (error) {
+      console.error(error)
+    }
+  }
 </script>
 
 <svelte:head>
   <title>BlackJack</title>
 </svelte:head>
 
-<WinnerModal
-  bind:gameOver
-  bind:user
-  on:click={() => {
-    deal()
-    gameOver = !gameOver
-  }}
-/>
+<WinnerModal bind:gameOver bind:user bind:matchTied on:click={restartGame} />
 <LoadingScreen bind:loading />
 {#if !loadStartPage}
   <StartPage
@@ -239,8 +276,9 @@
       </div>
     </div>
     <h2>Statistics:</h2>
+    <p>Matches Played: {matchesPlayed}</p>
     <p>User Wins: {userWins}</p>
-    <p>User Losses: {userLosses}</p>
+    <p>Dealer Wins: {userLosses}</p>
     <p>User Blackjacks: {userBlackjacks}</p>
     <p>Dealer Wins: {dealerWins}</p>
     <p>Dealer Losses: {dealerLosses}</p>
