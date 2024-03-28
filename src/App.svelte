@@ -9,4 +9,8 @@
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
+
+  body {
+    font-family: "Audiowide", sans-serif;
+  }
 </style>

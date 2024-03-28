@@ -3,6 +3,7 @@
   import gameStore from "./stores/gameStore"
   import axios from "axios"
   import MainCard from "./components/mainCard.svelte"
+    import StartPage from "./components/startPage.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -190,11 +191,15 @@
   onDestroy(() => {
     localStorage.clear()
   })
+  let loadStartPage = true
 </script>
 
 <svelte:head>
   <title>BlackJack</title>
 </svelte:head>
+{#if loadStartPage}
+<StartPage />
+{:else}
 <div class="bg-white py-12">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="mx-auto flex w-full flex-col items-center justify-center">
@@ -219,3 +224,4 @@
   <p>Dealer Losses: {dealerLosses}</p>
   <p>Dealer Blackjacks: {dealerBlackjacks}</p>
 </div>
+{/if}
