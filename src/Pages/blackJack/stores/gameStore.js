@@ -5,7 +5,7 @@ let storedDetail = localStorage.getItem("BLACKJACK")
 if (typeof storedDetail != "object") {
   storedDetail = JSON.parse(storedDetail)
   // storedDetail.matchIds = []
-  console.log(storedDetail)
+  // console.log(storedDetail)
 }
 
 if (storedDetail == null) {
@@ -25,7 +25,7 @@ if (storedDetail == null) {
 const gameStore = writable(storedDetail)
 
 gameStore.subscribe((value) => {
-  console.log(value)
+  // console.log(value)
   localStorage.setItem("BLACKJACK", JSON.stringify(value))
 })
 
