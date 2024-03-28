@@ -5,6 +5,7 @@
   import MainCard from "./components/mainCard.svelte"
   import StartPage from "./components/startPage.svelte"
   import LoadingScreen from "./shared/loadingScreen.svelte"
+  import WinnerModal from "./shared/winnerModal.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -89,6 +90,7 @@
       console.error(error)
     }
   }
+
   const handleStartGame = async () => {
     try {
       let id = await handleStart()
@@ -97,6 +99,7 @@
       console.error(error)
     }
   }
+
   const handleStart = () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -178,6 +181,7 @@
   const checkGameOver = () => {
     if (playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)) {
       gameOver = true
+
       if (dealerScore === 21 && dealerHand.length === 2) {
         dealerBlackjacks++
       }
@@ -185,8 +189,10 @@
         userBlackjacks++
       }
       if (dealerScore > 21 || (playerScore <= 21 && playerScore > dealerScore)) {
+        user = "Player"
         userWins++
       } else {
+        user = "Dealer"
         userLosses++
       }
     }
@@ -195,12 +201,22 @@
   onDestroy(() => {
     localStorage.clear()
   })
+
+  let user
 </script>
 
 <svelte:head>
   <title>BlackJack</title>
 </svelte:head>
 
+<WinnerModal
+  bind:gameOver
+  bind:user
+  on:click={() => {
+    deal()
+    gameOver = !gameOver
+  }}
+/>
 <LoadingScreen bind:loading />
 {#if !loadStartPage}
   <StartPage
