@@ -2,7 +2,6 @@
   import { onMount, afterUpdate, onDestroy } from "svelte"
   import gameStore from "./stores/gameStore"
   import axios from "axios"
-  import Card from "./components/card.svelte"
   import MainCard from "./components/mainCard.svelte"
   let deck = []
   let playerHand = []
@@ -131,9 +130,10 @@
     checkGameOver()
   }
 
-  const stand = () => {
+  const stand = async () => {
     while (dealerScore < 17) {
-      dealerHand.push(drawCard())
+      let card = await drawCard()
+      dealerHand = [...dealerHand, card]
       updateScores()
     }
     checkGameOver()
@@ -186,6 +186,7 @@
     }
     updateScores()
   }
+  $:{console.log(userWins,userLosses)}
   onDestroy(() => {
     localStorage.clear()
   })
@@ -202,7 +203,7 @@
     </div>
     <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
       <MainCard title="Player" array={playerHand} score={playerScore} />
-      <MainCard title="Dealer" array={dealerHand}  score={dealerScore}  />
+      <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
     </div>
 
     <div class="flex items-center justify-center gap-6">
@@ -210,4 +211,11 @@
       <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
     </div>
   </div>
+  <h2>Statistics:</h2>
+  <p>User Wins: {userWins}</p>
+  <p>User Losses: {userLosses}</p>
+  <p>User Blackjacks: {userBlackjacks}</p>
+  <p>Dealer Wins: {dealerWins}</p>
+  <p>Dealer Losses: {dealerLosses}</p>
+  <p>Dealer Blackjacks: {dealerBlackjacks}</p>
 </div>
