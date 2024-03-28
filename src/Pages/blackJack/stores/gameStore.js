@@ -4,19 +4,19 @@ let storedDetail = localStorage.getItem("BLACKJACK")
 
 if (typeof storedDetail != "object") {
   storedDetail = JSON.parse(storedDetail)
-  storedDetail.matchIds = []
+  // storedDetail.matchIds = []
   console.log(storedDetail)
 }
 
 if (storedDetail == null) {
   storedDetail = {}
-  storedDetail.matchIds = []
+  // storedDetail.matchIds = []
 }
 
 /**
  * @typedef {Object} gameStore - represents the property detail object.
- * @type {Object}
- * represents the property detail object
+ * @type {Object} represents the property detail object
+ * @type {String} matchId- matchId
  */
 
 /**

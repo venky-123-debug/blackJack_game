@@ -1,6 +1,6 @@
 import svelte from "rollup-plugin-svelte"
 import commonjs from "@rollup/plugin-commonjs"
-import { nodeResolve } from "@rollup/plugin-node-resolve"
+import resolve from "@rollup/plugin-node-resolve"
 import livereload from "rollup-plugin-livereload"
 import { terser } from "rollup-plugin-terser"
 import css from "rollup-plugin-css-only"
@@ -63,11 +63,11 @@ export default {
     // some cases you'll need additional configuration -
     // consult the documentation for details:
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
-    // resolve({
-    //   browser: true,
-    //   dedupe: ["svelte"],
-    // }),
-    nodeResolve(),
+    resolve({
+      browser: true,
+      dedupe: ["svelte"],
+    }),
+    // nodeResolve(),
     commonjs(),
 
     // In dev mode, call `npm run start` once
