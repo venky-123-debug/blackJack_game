@@ -318,17 +318,15 @@
   const split = async () => {
     try {
       if (checkSplit()) {
-        let card1 = playerHand[0]
-        let card2 = playerHand[1]
-        playerHand = [card1]
-        splitHand = [card2]
+        playerHand = [playerHand[0]]
+        splitHand = [playerHand[1]]
 
         playerHand.push(await drawCard())
         splitHand.push(await drawCard())
 
         let outcomes = await Promise.all([playHand(playerHand), playHand(splitHand)])
 
-        console.log("Outcomes:", outcomes)
+        console.log({ outcomes })
 
         if (outcomes.length === 2) {
           checkGameOver()
@@ -374,7 +372,7 @@
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
         <MainCard title="Player" array={playerHand} score={playerScore} />
-        <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
+        <MainCard title="Dealer" array={dealerHand} score={dealerHand.length && dealerHand[0].hidden ? dealerScore - dealerHand[0].value : dealerScore} />
         {#if splitHand.length}
           <MainCard title="Split" array={splitHand} score={dealerScore} />
         {/if}

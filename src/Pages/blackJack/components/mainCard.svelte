@@ -3,6 +3,11 @@
   export let title = ""
   export let array = []
   export let score = 0
+
+  // $: {if (array.length && title == "Dealer" && array[0].hidden) {
+  //   score = score - array[0].value
+  //   console.log(array[0].value)}
+  // }
 </script>
 
 <div class="flex min-h-[350px] max-w-xl flex-col items-start justify-between rounded-md bg-gray-300 p-6">
