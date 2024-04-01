@@ -82,19 +82,38 @@
     }
   }
 
+  // const deal = async () => {
+  //   try {
+  //     playerHand = [await drawCard(), await drawCard()]
+  //     // dealerHand = [await drawCard(), await drawCard()]
+
+  //     dealerHand = [{ ...await drawCard(), hidden: true }, await drawCard()]
+  //     matchesPlayed++
+  //     console.log({ playerHand, dealerHand })
+  //     updateScores()
+  //     console.log({ dealerScore, playerScore })
+  //     checkWin()
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
   const deal = async () => {
-    try {
-      playerHand = [await drawCard(), await drawCard()]
-      dealerHand = [await drawCard(), await drawCard()]
-      matchesPlayed++
-      // console.log({ playerHand, dealerHand })
-      updateScores()
-      console.log({ dealerScore, playerScore })
-      checkWin()
-    } catch (error) {
-      console.error(error)
-    }
+  try {
+    playerHand = [await drawCard(), await drawCard()];
+    dealerHand = (await Promise.all([
+      { ...await drawCard(), hidden: true }, // Hide the first card
+      { ...await drawCard(), hidden: false } // Show the second card
+    ]));
+    matchesPlayed++;
+    updateScores();
+    console.log({ playerHand, dealerHand });
+    console.log({ dealerScore, playerScore });
+    checkWin();
+  } catch (error) {
+    console.error(error);
   }
+}
+
 
   const handleStartGame = async () => {
     try {
@@ -153,27 +172,14 @@
     }
   }
 
-  // const stand = async () => {
-  //   if (dealerScore < 17) {
-  //     let card = await drawCard()
-  //     dealerHand = [...dealerHand, card]
-  //     updateScores()
-
-  //     if (!hitCalled && playerScore > 17 && playerScore > dealerScore) {
-  //       hitCalled = true
-  //       await stand()
-  //     } else {
-  //       checkGameOver()
-  //     }
-  //   } else {
-  //     checkGameOver()
-  //   }
-  // }
+ 
 
   const stand = async () => {
     if (dealerScore < 17) {
-      let card = await drawCard()
+      let card ={ ...await drawCard(), hidden: false }
+      // let card = await drawCard()
       dealerHand = [...dealerHand, card]
+      console.log({dealerHand})
       updateScores()
       await stand()
     } else {
@@ -252,16 +258,13 @@
           user = "Dealer"
           userLosses++
         } else {
-          // Scores are tied
           matchTied = true
         }
       } else {
-        // Dealer busts
         user = "Player"
         userWins++
       }
     } else {
-      // Player busts
       user = "Dealer"
       userLosses++
     }
