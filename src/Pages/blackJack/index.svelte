@@ -9,6 +9,7 @@
   let deck = []
   let playerHand = []
   let dealerHand = []
+  let splitHand = []
   let playerScore = 0
   let dealerScore = 0
   let userWins = 0
@@ -31,6 +32,7 @@
   onMount(() => {
     createDeck()
     handleStartGame()
+    checkSplit()
   })
   const createDeck = () => {
     deck = []
@@ -139,36 +141,6 @@
     })
   }
 
-  const hit = async () => {
-    try {
-      let card = await drawCard()
-      playerHand = [...playerHand, card]
-      // console.log({ playerHand })
-      console.log({ playerScore, dealerScore })
-      if (playerScore > 17 && playerScore > dealerScore) {
-        await stand()
-      }
-      updateScores()
-      checkGameOver()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const stand = async () => {
-    if (dealerScore < 17 && playerScore >= dealerScore) {
-      dealerHand[0].hidden = false
-      let card = { ...(await drawCard()), hidden: false }
-      // let card = await drawCard()
-      dealerHand = [...dealerHand, card]
-      console.log({ dealerHand })
-      updateScores()
-      await stand()
-      checkMatchTied()
-      checkGameOver()
-    }
-  }
-
   const updateScores = () => {
     playerScore = calculateScore(playerHand)
     dealerScore = calculateScore(dealerHand)
@@ -200,6 +172,7 @@
   }
   const checkGameOver = () => {
     if (playerScore <= 21) {
+      console.log("hit")
       if (dealerScore <= 21) {
         if (playerScore > dealerScore) {
           user = "Player"
@@ -214,6 +187,9 @@
         user = "Player"
         userWins++
       }
+    } else if (dealerScore <= 21 && playerScore > dealerScore) {
+      user = "Player"
+      userWins++
     } else {
       user = "Dealer"
       userLosses++
@@ -223,7 +199,7 @@
 
     checkWin()
 
-    gameOver = playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21)
+    gameOver = playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21)
   }
 
   const checkMatchTied = () => {
@@ -263,8 +239,105 @@
       gameOver = false
     }
   }
-  const canSplit = () => {
+
+  const hit = async () => {
+    try {
+      let card = await drawCard()
+      playerHand = [...playerHand, card]
+      // console.log({ playerHand })
+      console.log({ playerScore, dealerScore })
+      if (playerScore > 17 && playerScore > dealerScore) {
+        await stand()
+      }
+      updateScores()
+      checkGameOver()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const stand = async () => {
+    if (dealerScore < 17 && playerScore >= dealerScore) {
+      dealerHand[0].hidden = false
+      let card = { ...(await drawCard()), hidden: false }
+      dealerHand = [...dealerHand, card]
+      console.log({ dealerHand })
+      updateScores()
+      checkMatchTied()
+      checkGameOver()
+      await stand()
+    }
+  }
+
+  const checkSplit = () => {
     return playerHand.length === 2 && playerHand[0].value === playerHand[1].value
+  }
+
+  // const split = async () => {
+  //   try {
+  //     if (checkSplit()) {
+  //       playerHand = [playerHand[0]]
+  //       splitHand = [playerHand[1]]
+
+  //       // Deal an additional card to each hand
+  //       playerHand.push(await drawCard())
+  //       splitHand.push(await drawCard())
+
+  //       let outcomes = await Promise.all([playHand(playerHand), playHand(splitHand)])
+
+  //       console.log({ outcomes })
+
+  //       if (outcomes.length === 2) {
+  //         checkGameOver()
+  //       }
+  //     } else {
+  //       console.log("You cannot split your hand.")
+  //     }
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+
+  const playHand = async (hand) => {
+    try {
+      while (calculateScore(hand) < 17) {
+        hand.push(await drawCard())
+        updateScores()
+        if (calculateScore(hand) > 21) {
+          return "lose"
+        }
+      }
+      return "stand"
+    } catch (error) {
+      console.error(error)
+      return "error"
+    }
+  }
+
+  const split = async () => {
+    try {
+      if (checkSplit()) {
+        let card1 = playerHand[0]
+        let card2 = playerHand[1]
+        playerHand = [card1]
+        splitHand = [card2]
+
+        playerHand.push(await drawCard())
+        splitHand.push(await drawCard())
+
+        let outcomes = await Promise.all([playHand(playerHand), playHand(splitHand)])
+
+        console.log("Outcomes:", outcomes)
+
+        if (outcomes.length === 2) {
+          checkGameOver()
+        }
+      } else {
+        console.log("You cannot split your hand.")
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   onDestroy(() => {
@@ -301,12 +374,15 @@
       <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
         <MainCard title="Player" array={playerHand} score={playerScore} />
         <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
+        {#if splitHand.length}
+          <MainCard title="Split" array={splitHand} score={dealerScore} />
+        {/if}
       </div>
 
       <div class="flex items-center justify-center gap-6">
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
-        <button class:hidden={playerHand.length === 2 && playerHand[0].value === playerHand[1].value} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>SPLIT</button>
+        <button class:hidden={!playerHand.length || gameOver || !checkSplit()} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={split}>SPLIT</button>
       </div>
     </div>
     <h2>Statistics:</h2>
