@@ -82,7 +82,6 @@
     }
   }
 
-
   const deal = async () => {
     try {
       playerHand = [await drawCard(), await drawCard()]
@@ -264,6 +263,9 @@
       gameOver = false
     }
   }
+  const canSplit = () => {
+    return playerHand.length === 2 && playerHand[0].value === playerHand[1].value
+  }
 
   onDestroy(() => {
     localStorage.clear()
@@ -304,6 +306,7 @@
       <div class="flex items-center justify-center gap-6">
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
+        <button class:hidden={playerHand.length === 2 && playerHand[0].value === playerHand[1].value} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>SPLIT</button>
       </div>
     </div>
     <h2>Statistics:</h2>
@@ -316,3 +319,9 @@
     <p>Dealer Blackjacks: {dealerBlackjacks}</p>
   </div>
 {/if}
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
