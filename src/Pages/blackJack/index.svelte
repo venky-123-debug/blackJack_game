@@ -32,7 +32,6 @@
   onMount(() => {
     createDeck()
     handleStartGame()
-    checkSplit()
   })
   const createDeck = () => {
     deck = []
@@ -94,6 +93,8 @@
       matchesPlayed++
       updateScores()
       checkWin()
+      checkSplit()
+
       console.log({ playerHand, dealerHand })
       console.log({ dealerScore, playerScore })
     } catch (error) {
@@ -187,7 +188,7 @@
         user = "Player"
         userWins++
       }
-    } else if (dealerScore <= 21 && playerScore > dealerScore) {
+    } else if (dealerScore <= 21 && playerScore <= 21 && playerScore > dealerScore) {
       user = "Player"
       userWins++
     } else {
@@ -199,7 +200,7 @@
 
     checkWin()
 
-    gameOver = playerScore > 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21)
+    gameOver = playerScore === 21 || playerScore >= 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21)
   }
 
   const checkMatchTied = () => {
