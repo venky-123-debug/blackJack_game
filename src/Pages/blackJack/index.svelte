@@ -93,6 +93,8 @@
       matchesPlayed++
       updateScores()
       checkWin()
+      checkMatchTied()
+
       checkSplit()
 
       console.log({ playerHand, dealerHand })
@@ -199,6 +201,7 @@
     updateScores()
 
     checkWin()
+    // checkMatchTied()
 
     gameOver = playerScore === 21 || playerScore >= 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21)
   }
@@ -233,7 +236,6 @@
   }
   const checkWin = () => {
     try {
-      checkMatchTied()
       checkBlackJack()
     } catch (error) {
       console.error(error)
@@ -280,7 +282,6 @@
   //       playerHand = [playerHand[0]]
   //       splitHand = [playerHand[1]]
 
-  //       // Deal an additional card to each hand
   //       playerHand.push(await drawCard())
   //       splitHand.push(await drawCard())
 
@@ -372,7 +373,7 @@
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
         <MainCard title="Player" array={playerHand} score={playerScore} />
-        <MainCard title="Dealer" array={dealerHand} score={dealerHand.length && dealerHand[0].hidden ? dealerScore - dealerHand[0].value : dealerScore} />
+        <MainCard title="Dealer" array={dealerHand} score={getValue(dealerHand[0]) && dealerHand.length && dealerHand[0].hidden ? dealerScore - dealerHand[0].value : dealerScore} />
         {#if splitHand.length}
           <MainCard title="Split" array={splitHand} score={dealerScore} />
         {/if}
