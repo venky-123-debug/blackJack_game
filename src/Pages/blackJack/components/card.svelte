@@ -1,9 +1,12 @@
 <script>
+  import BgPattern1 from "../shared/bgPattern1.svelte";
   export let card
 </script>
 
 {#if card.hidden}
-  <div class="h-full w-[30%] rounded-md bg-gray-100" />
+  <div class="h-full w-[30%] rounded-md bg-gray-100 ">
+    <!-- <BgPattern1 /> -->
+  </div>
 {:else}
   <div class="flex w-[30%] flex-col justify-between gap-3 rounded-md bg-white">
     <div class="flex w-full flex-col items-start justify-center pl-2">

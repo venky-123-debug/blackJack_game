@@ -6,6 +6,7 @@
   import StartPage from "./components/startPage.svelte"
   import LoadingScreen from "./shared/loadingScreen.svelte"
   import WinnerModal from "./shared/winnerModal.svelte"
+    import StatButton from "./shared/statButton.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -95,10 +96,10 @@
       let value = getValue(dealerHand[0].value)
       dealerScore -= value
       checkWin()
-      checkMatchTied()
-      
+      // checkMatchTied()
+
       checkSplit()
-      console.log({ dealerScore, playerScore ,value})
+      console.log({ dealerScore, playerScore, value })
       console.log({ playerHand, dealerHand })
     } catch (error) {
       console.error(error)
@@ -203,8 +204,10 @@
 
     checkWin()
     // checkMatchTied()
-
-    gameOver = playerScore === dealerScore || playerScore === 21 || playerScore >= 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21)
+    setTimeout(() => {
+      // gameOver = true
+      gameOver = playerScore === dealerScore || playerScore === 21 || playerScore >= 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21)
+    }, 100)
   }
 
   const checkMatchTied = () => {
@@ -212,7 +215,9 @@
       if (dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
         // if (matchesPlayed === 1 && dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
         matchTied = true
-        gameOver = true
+        setTimeout(() => {
+          gameOver = true
+        }, 100)
       }
     } catch (error) {
       console.error(error)
@@ -224,12 +229,16 @@
       if (dealerScore === 21 && dealerHand.length === 2) {
         user = "Dealer"
         dealerBlackjacks++
-        gameOver = true
+        setTimeout(() => {
+          gameOver = true
+        }, 100)
       }
       if (playerScore === 21 && playerHand.length === 2) {
         user = "Player"
         userBlackjacks++
-        gameOver = true
+        setTimeout(() => {
+          gameOver = true
+        }, 100)
       }
     } catch (error) {
       console.error(error)
@@ -326,20 +335,20 @@
     }}
   />
 {:else}
-  <div class="bg-white py-12">
+  <div class="bg-gradient-to-r from-rose-100 to-teal-100 relative py-12">
+    <StatButton />
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+        <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
         <MainCard title="Player" array={playerHand} score={playerScore} />
-        <MainCard title="Dealer" array={dealerHand} score={getValue(dealerHand[0]) && dealerHand.length && dealerHand[0].hidden ? dealerScore - dealerHand[0].value : dealerScore} />
-        {#if splitHand.length}
+        <!-- {#if splitHand.length}
           <MainCard title="Split" array={splitHand} score={dealerScore} />
-        {/if}
+        {/if} -->
       </div>
 
       <div class="flex items-center justify-center gap-6">
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
-        <button class:hidden={!playerHand.length || gameOver || !checkSplit()} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={split}>SPLIT</button>
         <!-- <button class:hidden={!playerHand.length || gameOver || !checkSplit()} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={split}>SPLIT</button> -->
       </div>
     </div>
@@ -348,14 +357,12 @@
     <p>User Wins: {userWins}</p>
     <p>Dealer Wins: {userLosses}</p>
     <p>User Blackjacks: {userBlackjacks}</p>
-    <p>Dealer Wins: {dealerWins}</p>
-    <p>Dealer Losses: {dealerLosses}</p>
     <p>Dealer Blackjacks: {dealerBlackjacks}</p>
   </div>
 {/if}
 
-<style>
+<!-- <style>
   .hidden {
     display: none;
   }
-</style>
+</style> -->
