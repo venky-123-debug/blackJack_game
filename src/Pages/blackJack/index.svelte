@@ -8,6 +8,7 @@
   import WinnerModal from "./shared/winnerModal.svelte"
   import StatButton from "./shared/statButton.svelte"
   import StatModal from "./shared/statModal.svelte"
+    import GameTitle from "./shared/gameTitle.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -55,15 +56,8 @@
         deck.push({ suit, value, entityCode, color })
       }
     }
-    shuffleDeck()
   }
-  const shuffleDeck = () => {
-    for (let i = deck.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1))
-
-      ;[deck[i], deck[j]] = [deck[j], deck[i]]
-    }
-  }
+ 
 
   const drawCard = async () => {
     loading = true
@@ -273,7 +267,6 @@
       dealerHand[0].hidden = false
       let card = { ...(await drawCard()), hidden: false }
       dealerHand = [...dealerHand, card]
-      console.log({ dealerHand })
       updateScores()
       checkMatchTied()
       checkGameOver()
@@ -326,6 +319,7 @@
 <svelte:head>
   <title>BlackJack</title>
 </svelte:head>
+
 <StatModal bind:matchesPlayed bind:userWins bind:userLosses bind:userBlackjacks bind:dealerBlackjacks on:click={toggleStatModal} bind:statModal />
 <WinnerModal bind:gameOver bind:user bind:matchTied on:click={restartGame} />
 <LoadingScreen bind:loading />
@@ -337,7 +331,9 @@
     }}
   />
 {:else}
-  <div class="relative bg-gradient-to-r from-rose-100 to-teal-100 py-12">
+  <div class="relative h-screen w-screen bg-gradient-to-r from-rose-100 to-teal-100 py-12">
+    
+    <GameTitle />
     <StatButton on:click={toggleStatModal} />
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
@@ -350,11 +346,5 @@
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
       </div>
     </div>
-    <h2>Statistics:</h2>
-    <p>Matches Played: {matchesPlayed}</p>
-    <p>User Wins: {userWins}</p>
-    <p>Dealer Wins: {userLosses}</p>
-    <p>User Blackjacks: {userBlackjacks}</p>
-    <p>Dealer Blackjacks: {dealerBlackjacks}</p>
   </div>
 {/if}

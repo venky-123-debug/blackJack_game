@@ -39,7 +39,7 @@
             </div>
 
             <div >
-             <button on:click type="button" class="mt-6 rounded bg-red-600 px-2 py-2 text-sm font-semibold text-white hover:bg-red-500 active:bg-red-600 " >Close</button>
+             <button on:click type="button" class="mt-6 rounded bg-red-600 px-2 py-2 text-sm font-semibold text-white hover:bg-red-500 active:bg-red-600 " ><i class="fa-solid fa-xmark"></i>&nbsp;Close</button>
             </div>
           </div>
         </div>
