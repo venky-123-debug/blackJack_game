@@ -165,6 +165,11 @@
       return parseInt(value, 10)
     }
   }
+
+  const revealDealerScore = () => {
+    dealerHand[0].hidden = false
+  }
+
   const checkGameOver = () => {
     if (playerScore <= 21) {
       console.log("hit")
@@ -176,24 +181,24 @@
         // } else
 
         if (dealerScore > playerScore) {
-          dealerHand[0].hidden = false
+          revealDealerScore()
           user = "Dealer"
           userLosses++
         } else if (playerScore === dealerScore) {
-          dealerHand[0].hidden = false
+          revealDealerScore()
           matchTied = true
         }
       } else {
-        dealerHand[0].hidden = false
+        revealDealerScore()
         user = "Player"
         userWins++
       }
     } else if (dealerScore <= 21 && playerScore <= 21 && playerScore > dealerScore) {
-      dealerHand[0].hidden = false
+      revealDealerScore()
       user = "Player"
       userWins++
     } else {
-      dealerHand[0].hidden = false
+      revealDealerScore()
       user = "Dealer"
       userLosses++
     }
@@ -232,6 +237,8 @@
         dealerBlackjacks++
         setTimeout(() => {
           gameOver = true
+          revealDealerScore()
+
         }, 100)
       }
       if (playerScore === 21 && playerHand.length === 2) {
@@ -240,6 +247,7 @@
         userBlackjacks++
         setTimeout(() => {
           gameOver = true
+          revealDealerScore()
         }, 100)
       }
     } catch (error) {
@@ -274,7 +282,7 @@
   const stand = async () => {
     if (playerScore > dealerScore && dealerScore <= 21) {
       // if (dealerScore < 17 && playerScore > dealerScore) {
-      dealerHand[0].hidden = false
+      revealDealerScore()
       let card = { ...(await drawCard()), hidden: false }
       dealerHand = [...dealerHand, card]
       updateScores()
