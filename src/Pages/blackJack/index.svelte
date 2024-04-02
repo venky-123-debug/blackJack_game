@@ -92,14 +92,14 @@
       ])
       matchesPlayed++
       updateScores()
-      dealerScore -= dealerHand[0].value
+      let value = getValue(dealerHand[0].value)
+      dealerScore -= value
       checkWin()
       checkMatchTied()
-
+      
       checkSplit()
-
+      console.log({ dealerScore, playerScore ,value})
       console.log({ playerHand, dealerHand })
-      console.log({ dealerScore, playerScore })
     } catch (error) {
       console.error(error)
     }
@@ -301,6 +301,8 @@
 
   const restartGame = () => {
     try {
+      playerScore = 0
+      dealerScore = 0
       deal()
       gameOver = !gameOver
       matchTied = false
