@@ -12,7 +12,6 @@
   let deck = []
   let playerHand = []
   let dealerHand = []
-  let splitHand = []
   let playerScore = 0
   let dealerScore = 0
   let userWins = 0
@@ -27,6 +26,7 @@
   let matchTied = false
   let user
   let statModal = false
+  let blackJackFound = false
 
   let suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
   let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -169,15 +169,17 @@
     if (playerScore <= 21) {
       console.log("hit")
       if (dealerScore <= 21) {
-        if (playerScore > dealerScore && playerScore >= 19) {
-          console.log("player yet to win")
-          user = "Player"
-          userWins++
-        } else if (dealerScore > playerScore) {
+        // if (playerScore > dealerScore && playerScore >= 19) {
+        //   console.log("player yet to win")
+        //   user = "Player"
+        //   userWins++
+        // } else
+
+        if (dealerScore > playerScore) {
           dealerHand[0].hidden = false
           user = "Dealer"
           userLosses++
-        } else {
+        } else if (playerScore === dealerScore) {
           dealerHand[0].hidden = false
           matchTied = true
         }
@@ -204,7 +206,7 @@
     // checkMatchTied()
     setTimeout(() => {
       // gameOver = true
-      gameOver = playerScore === dealerScore || playerScore === 21 || playerScore >= 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21)
+      gameOver = playerScore === dealerScore || playerScore === 21 || playerScore >= 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21) || (dealerScore < playerScore && dealerScore >= 21)
     }, 100)
   }
 
@@ -225,6 +227,7 @@
   const checkBlackJack = () => {
     try {
       if (dealerScore === 21 && dealerHand.length === 2) {
+        blackJackFound = true
         user = "Dealer"
         dealerBlackjacks++
         setTimeout(() => {
@@ -232,6 +235,7 @@
         }, 100)
       }
       if (playerScore === 21 && playerHand.length === 2) {
+        blackJackFound = true
         user = "Player"
         userBlackjacks++
         setTimeout(() => {
@@ -268,7 +272,8 @@
   }
 
   const stand = async () => {
-    if (dealerScore < 17 && playerScore > dealerScore) {
+    if (playerScore > dealerScore && dealerScore <= 21) {
+      // if (dealerScore < 17 && playerScore > dealerScore) {
       dealerHand[0].hidden = false
       let card = { ...(await drawCard()), hidden: false }
       dealerHand = [...dealerHand, card]
@@ -290,6 +295,7 @@
       deal()
       gameOver = !gameOver
       matchTied = false
+      blackJackFound = false
     } catch (error) {
       console.error(error)
     }
@@ -304,7 +310,7 @@
 </svelte:head>
 
 <StatModal bind:matchesPlayed bind:userWins bind:userLosses bind:userBlackjacks bind:dealerBlackjacks on:click={toggleStatModal} bind:statModal />
-<WinnerModal bind:gameOver bind:user bind:matchTied on:click={restartGame} />
+<WinnerModal bind:gameOver bind:user bind:matchTied on:click={restartGame} bind:blackJackFound />
 <LoadingScreen bind:loading />
 {#if !loadStartPage}
   <StartPage
@@ -315,7 +321,7 @@
   />
 {:else}
   <div class="relative h-screen w-screen bg-gradient-to-r from-rose-100 to-teal-100 py-6 px-6 lg:px-8">
-    <div class="flex max-w-2xl lg:max-w-none items-center justify-between ">
+    <div class="flex max-w-2xl items-center justify-between lg:max-w-none">
       <GameTitle />
       <StatButton on:click={toggleStatModal} />
     </div>

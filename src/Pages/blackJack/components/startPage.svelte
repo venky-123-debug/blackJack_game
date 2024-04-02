@@ -1,5 +1,16 @@
-<div class="overflow-hidden bg-white min-h-screen h-screen">
-  <div class="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20">
+<script>
+  import CoinIcon from "../shared/coinIcon.svelte"
+</script>
+
+<div class="h-screen min-h-screen overflow-hidden bg-white">
+  <div class="relative isolate h-full w-full overflow-hidden bg-gradient-to-b from-indigo-100/20">
+    <!-- <i class="fa-solid fa-coin absolute right-36 top-10 text-blue-500 text-2xl"></i>
+    <i class="fa-solid fa-coin absolute left-36 top-24 text-green-500 text-3xl"></i>
+    <i class="fa-solid fa-coin absolute bottom-36 left-60 text-violet-500 text-6xl"></i> -->
+    <CoinIcon color="blue-500" size="2xl" position="right-36" />
+    <CoinIcon color="green-500" size="3xl" position="left-36 top-24" />
+    <CoinIcon color="violet-500" size="6xl" position="bottom-36 left-60" />
+
     <div class="mx-auto max-w-7xl pt-24 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:px-8">
       <div class="px-6 lg:px-0 lg:pt-4">
         <div class="mx-auto max-w-2xl">
@@ -27,7 +38,7 @@
                       <div class="border-r border-gray-600/10 px-4 py-2">Instructions</div>
                     </div>
                   </div>
-                  <div class="px-28 pb-14  pt-6">
+                  <div class="px-28 pb-14 pt-6">
                     <div class="text-9xl text-white">
                       <i class="fa-solid fa-cards" />
                     </div>

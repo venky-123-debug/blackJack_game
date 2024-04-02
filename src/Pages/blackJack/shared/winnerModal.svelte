@@ -2,6 +2,7 @@
   export let gameOver = false
   export let user
   export let matchTied = false
+  export let blackJackFound = false
 </script>
 
 {#if gameOver}
@@ -16,9 +17,14 @@
               <i class="animate-bounce {matchTied ? 'fa-sharp fa-solid fa-circle-stop text-red-500' : user == 'Player' ? 'fa-solid fa-face-tongue-money text-green-500' : 'fa-light fa-face-disappointed text-green-500'} text-5xl" />
             </div>
             <div class="mt-3 text-center sm:mt-5">
-              <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">{matchTied ? "Match Tied" : `${user} wins!`}</h3>
+              <h3 class="text-xl font-semibold leading-6 text-green-500" id="modal-title">{matchTied ? "Match Tied" : `${user} wins!`}</h3>
             </div>
           </div>
+          {#if blackJackFound}
+            <div class="mt-3 text-center sm:mt-5">
+              <h3 class="text-lg font-semibold leading-6 text-blue-500">by Blackjack</h3>
+            </div>
+          {/if}
           <div class="mt-5 text-center sm:mt-6">
             <button on:click type="button" class="inline-flex w-1/2 justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Play Again</button>
           </div>
