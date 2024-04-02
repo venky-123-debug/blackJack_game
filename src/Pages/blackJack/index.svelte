@@ -8,7 +8,7 @@
   import WinnerModal from "./shared/winnerModal.svelte"
   import StatButton from "./shared/statButton.svelte"
   import StatModal from "./shared/statModal.svelte"
-    import GameTitle from "./shared/gameTitle.svelte"
+  import GameTitle from "./shared/gameTitle.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -57,7 +57,6 @@
       }
     }
   }
- 
 
   const drawCard = async () => {
     loading = true
@@ -90,8 +89,6 @@
       let value = getValue(dealerHand[0].value)
       dealerScore -= value
       checkWin()
-
-      checkSplit()
       console.log({ dealerScore, playerScore, value })
       console.log({ playerHand, dealerHand })
     } catch (error) {
@@ -172,30 +169,38 @@
     if (playerScore <= 21) {
       console.log("hit")
       if (dealerScore <= 21) {
-        if (playerScore > dealerScore) {
+        if (playerScore > dealerScore && playerScore >= 19) {
+          console.log("player yet to win")
           user = "Player"
           userWins++
         } else if (dealerScore > playerScore) {
+          dealerHand[0].hidden = false
           user = "Dealer"
           userLosses++
         } else {
+          dealerHand[0].hidden = false
           matchTied = true
         }
       } else {
+        dealerHand[0].hidden = false
         user = "Player"
         userWins++
       }
     } else if (dealerScore <= 21 && playerScore <= 21 && playerScore > dealerScore) {
+      dealerHand[0].hidden = false
       user = "Player"
       userWins++
     } else {
+      dealerHand[0].hidden = false
       user = "Dealer"
       userLosses++
     }
 
+    // dealerHand[0].hidden = false
     updateScores()
 
     checkWin()
+
     // checkMatchTied()
     setTimeout(() => {
       // gameOver = true
@@ -274,28 +279,6 @@
     }
   }
 
-  const checkSplit = () => {
-    return playerHand.length === 2 && playerHand[0].value === playerHand[1].value
-  }
-  const split = async () => {
-    try {
-      if (checkSplit()) {
-        let firstHand = [playerHand[0], await drawCard()]
-        let secondHand = [playerHand[1], await drawCard()]
-
-        playerHand = []
-
-        playerHand = [...firstHand]
-        splitHand = [...secondHand]
-
-        playerScore = calculateScore(playerHand)
-        splitScore = calculateScore(splitHand)
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   onDestroy(() => {
     localStorage.clear()
   })
@@ -331,19 +314,20 @@
     }}
   />
 {:else}
-  <div class="relative h-screen w-screen bg-gradient-to-r from-rose-100 to-teal-100 py-12">
-    
-    <GameTitle />
-    <StatButton on:click={toggleStatModal} />
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+  <div class="relative h-screen w-screen bg-gradient-to-r from-rose-100 to-teal-100 py-6 px-6 lg:px-8">
+    <div class="flex max-w-2xl lg:max-w-none items-center justify-between ">
+      <GameTitle />
+      <StatButton on:click={toggleStatModal} />
+    </div>
+    <div class="mx-auto max-w-7xl">
       <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
         <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
         <MainCard title="Player" array={playerHand} score={playerScore} />
       </div>
 
-      <div class="flex items-center justify-center gap-6">
-        <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
-        <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
+      <div class="mt-6 flex items-center justify-center gap-6">
+        <button disabled={!playerHand.length || gameOver} type="button" class=" w-32 rounded bg-green-600 px-2 py-2 text-sm font-semibold text-white hover:bg-green-500 active:bg-green-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
+        <button disabled={!playerHand.length || gameOver} type="button" class="w-32 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
       </div>
     </div>
   </div>

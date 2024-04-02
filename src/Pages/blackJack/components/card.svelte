@@ -4,7 +4,7 @@
 </script>
 
 {#if card.hidden}
-  <div class="h-full w-[30%] rounded-md bg-gray-100 ">
+  <div class="h-full w-[30%] rounded-md bg-gradient-to-r from-teal-400 to-gray-800 ">
     <!-- <BgPattern1 /> -->
   </div>
 {:else}

@@ -1,1 +1,1 @@
-<button on:click type="button" class="rounded bg-blue-600 px-2 py-2 absolute top-4 right-6 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300"><i class="fa-solid fa-square-kanban"></i>&nbsp;Statistics</button>
+<button on:click type="button" class="rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300"><i class="fa-solid fa-square-kanban"></i>&nbsp;Statistics</button>

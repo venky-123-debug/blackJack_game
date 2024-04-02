@@ -1,1 +1,1 @@
-<div class="absolute top-4 left-6 text-3xl font-semibold text-blue-500 "><i class="fa-solid fa-cards"></i>&nbsp;BlackJack</div>
+<div class="text-3xl font-semibold text-blue-500 "><i class="fa-solid fa-cards"></i>&nbsp;BlackJack</div>

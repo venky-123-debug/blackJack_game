@@ -6,7 +6,7 @@
 
 </script>
 
-<div class="flex min-h-[350px] max-w-xl flex-col items-start justify-between rounded-md bg-gray-300 p-6">
+<div class="flex min-h-[350px] max-w-xl flex-col items-start justify-between rounded-md bg-gradient-to-r from-violet-200 to-pink-200 p-6">
   <div class="flex w-full items-center justify-between">
     <div class="flex w-full items-center text-center">
       <div class="text-3xl font-semibold text-gray-900">{title}</div>
