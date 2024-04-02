@@ -1,12 +1,13 @@
 <script>
-  import { onMount, afterUpdate, onDestroy } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import gameStore from "./stores/gameStore"
   import axios from "axios"
   import MainCard from "./components/mainCard.svelte"
   import StartPage from "./components/startPage.svelte"
   import LoadingScreen from "./shared/loadingScreen.svelte"
   import WinnerModal from "./shared/winnerModal.svelte"
-    import StatButton from "./shared/statButton.svelte"
+  import StatButton from "./shared/statButton.svelte"
+  import StatModal from "./shared/statModal.svelte"
   let deck = []
   let playerHand = []
   let dealerHand = []
@@ -15,8 +16,6 @@
   let dealerScore = 0
   let userWins = 0
   let userLosses = 0
-  let dealerWins = 0
-  let dealerLosses = 0
   let userBlackjacks = 0
   let dealerBlackjacks = 0
   let gameOver = false
@@ -26,6 +25,7 @@
   let matchesPlayed = 0
   let matchTied = false
   let user
+  let statModal = false
 
   let suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
   let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -96,7 +96,6 @@
       let value = getValue(dealerHand[0].value)
       dealerScore -= value
       checkWin()
-      // checkMatchTied()
 
       checkSplit()
       console.log({ dealerScore, playerScore, value })
@@ -319,12 +318,15 @@
       console.error(error)
     }
   }
+  const toggleStatModal = () => {
+    statModal = !statModal
+  }
 </script>
 
 <svelte:head>
   <title>BlackJack</title>
 </svelte:head>
-
+<StatModal bind:matchesPlayed bind:userWins bind:userLosses bind:userBlackjacks bind:dealerBlackjacks on:click={toggleStatModal} bind:statModal />
 <WinnerModal bind:gameOver bind:user bind:matchTied on:click={restartGame} />
 <LoadingScreen bind:loading />
 {#if !loadStartPage}
@@ -335,21 +337,17 @@
     }}
   />
 {:else}
-  <div class="bg-gradient-to-r from-rose-100 to-teal-100 relative py-12">
-    <StatButton />
+  <div class="relative bg-gradient-to-r from-rose-100 to-teal-100 py-12">
+    <StatButton on:click={toggleStatModal} />
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-blue-400 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2">
         <MainCard title="Dealer" array={dealerHand} score={dealerScore} />
         <MainCard title="Player" array={playerHand} score={playerScore} />
-        <!-- {#if splitHand.length}
-          <MainCard title="Split" array={splitHand} score={dealerScore} />
-        {/if} -->
       </div>
 
       <div class="flex items-center justify-center gap-6">
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={hit}>HIT</button>
         <button disabled={!playerHand.length || gameOver} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={stand}>STAND</button>
-        <!-- <button class:hidden={!playerHand.length || gameOver || !checkSplit()} type="button" class="mt-6 rounded bg-blue-600 px-2 py-2 text-sm font-semibold text-white hover:bg-blue-500 active:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-300" on:click={split}>SPLIT</button> -->
       </div>
     </div>
     <h2>Statistics:</h2>
@@ -360,9 +358,3 @@
     <p>Dealer Blackjacks: {dealerBlackjacks}</p>
   </div>
 {/if}
-
-<!-- <style>
-  .hidden {
-    display: none;
-  }
-</style> -->
