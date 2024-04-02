@@ -66,7 +66,6 @@
         return deck.pop()
       } else {
         let drawnCard = deck[randomNumber]
-        // console.log({ drawnCard })
         deck.splice(randomNumber, 1)
         return drawnCard
       }
@@ -119,7 +118,6 @@
   const drawMatch = async () => {
     try {
       let apiData = await handleDraw()
-      // console.log({ apiData })
       randomNumber = apiData.random
     } catch (error) {
       console.error(error)
@@ -174,12 +172,6 @@
     if (playerScore <= 21) {
       console.log("hit")
       if (dealerScore <= 21) {
-        // if (playerScore > dealerScore && playerScore >= 19) {
-        //   console.log("player yet to win")
-        //   user = "Player"
-        //   userWins++
-        // } else
-
         if (dealerScore > playerScore) {
           revealDealerScore()
           user = "Dealer"
@@ -202,15 +194,11 @@
       user = "Dealer"
       userLosses++
     }
-
-    // dealerHand[0].hidden = false
     updateScores()
 
     checkWin()
 
-    // checkMatchTied()
     setTimeout(() => {
-      // gameOver = true
       gameOver = playerScore === dealerScore || playerScore === 21 || playerScore >= 21 || dealerScore === 21 || (dealerScore > playerScore && dealerScore <= 21) || (dealerScore > playerScore && dealerScore >= 21) || (dealerScore < playerScore && dealerScore >= 21)
     }, 100)
   }
@@ -218,7 +206,6 @@
   const checkMatchTied = () => {
     try {
       if (dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
-        // if (matchesPlayed === 1 && dealerScore === playerScore && dealerScore <= 21 && playerScore <= 21) {
         matchTied = true
         setTimeout(() => {
           gameOver = true
@@ -267,7 +254,6 @@
     try {
       let card = await drawCard()
       playerHand = [...playerHand, card]
-      // console.log({ playerHand })
       console.log({ playerScore, dealerScore })
       if (playerScore > 17 && playerScore > dealerScore) {
         await stand()
@@ -281,7 +267,6 @@
 
   const stand = async () => {
     if (playerScore > dealerScore && dealerScore <= 21) {
-      // if (dealerScore < 17 && playerScore > dealerScore) {
       revealDealerScore()
       let card = { ...(await drawCard()), hidden: false }
       dealerHand = [...dealerHand, card]
