@@ -4,12 +4,11 @@
 
 <div class="h-screen min-h-screen overflow-hidden bg-white">
   <div class="relative isolate h-full w-full overflow-hidden bg-gradient-to-b from-indigo-100/20">
-    <!-- <i class="fa-solid fa-coin absolute right-36 top-10 text-blue-500 text-2xl"></i>
-    <i class="fa-solid fa-coin absolute left-36 top-24 text-green-500 text-3xl"></i>
-    <i class="fa-solid fa-coin absolute bottom-36 left-60 text-violet-500 text-6xl"></i> -->
-    <CoinIcon color="blue-500" size="2xl" position="right-36" />
+    <CoinIcon color="blue-500" size="2xl" position="right-36 top-6" />
     <CoinIcon color="green-500" size="3xl" position="left-36 top-24" />
     <CoinIcon color="violet-500" size="6xl" position="bottom-36 left-60" />
+    <CoinIcon color="blue-500" size="5xl" position="bottom-52 right-60" />
+    <!-- <CoinIcon color="Orange-500" size="5xl" position="bottom-52 right-60" /> -->
 
     <div class="mx-auto max-w-7xl pt-24 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:px-8">
       <div class="px-6 lg:px-0 lg:pt-4">
@@ -17,7 +16,6 @@
           <div class="max-w-lg">
             <div class="mt-40 sm:mt-32 lg:mt-16" />
             <h1 class="mt-10 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">BlackJack Game</h1>
-            <!-- <p class="mt-6 text-lg leading-8 text-gray-600">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.</p> -->
             <div class="mt-10 flex items-center gap-x-6">
               <button on:click type="button" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Start Game</button>
             </div>
